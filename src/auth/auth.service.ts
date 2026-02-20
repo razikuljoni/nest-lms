@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 import { UserService } from 'src/user/user.service';
 import { RegisterDto } from './dto/registerUser.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private jwtService: JwtService,
+  ) {}
 
   async registerUser(registerDto: RegisterDto) {
     const saltRounds = 10;
@@ -16,6 +20,10 @@ export class AuthService {
       password: hashedPass,
     });
 
-    return user;
+    const payload = { email: user?.email, sub: user?._id };
+    const token = await this.jwtService.signAsync(payload);
+    console.log(token);
+
+    return token;
   }
 }
