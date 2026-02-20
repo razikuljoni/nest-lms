@@ -16,8 +16,6 @@ export class AuthService {
       password: hashedPass,
     });
 
-    console.log('user', user);
-
-    return {};
+    return user;
   }
 }
