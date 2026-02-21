@@ -13,21 +13,21 @@ export class CourseService {
     return await this.courseModel.create(createCourseDto);
   }
 
-  findAll() {
-    return this.courseModel.find();
+  async findAll() {
+    return await this.courseModel.find({}).exec();
   }
 
-  findOne(id: string) {
-    return this.courseModel.findById({ _id: id });
+  async findOne(id: string) {
+    return await this.courseModel.findById(id).exec();
   }
 
-  update(id: string, updateCourseDto: UpdateCourseDto) {
-    return this.courseModel.findByIdAndUpdate(id, updateCourseDto, {
+  async update(id: string, updateCourseDto: UpdateCourseDto) {
+    return await this.courseModel.findByIdAndUpdate(id, updateCourseDto, {
       new: true,
     });
   }
 
-  remove(id: string) {
-    return this.courseModel.findByIdAndDelete(id);
+  async delete(id: string) {
+    return await this.courseModel.findByIdAndDelete(id);
   }
 }
