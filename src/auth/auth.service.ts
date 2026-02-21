@@ -16,6 +16,10 @@ export class AuthService {
   ) {}
 
   async registerUser(registerDto: RegisterDto) {
+    const alreadyExists = await this.userService.findByEmail(registerDto.email);
+    if (alreadyExists) {
+      throw new InternalServerErrorException('User already exists');
+    }
     const saltRounds = 10;
     const hashedPass = await bcrypt.hash(registerDto.password, saltRounds);
 

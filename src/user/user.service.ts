@@ -36,4 +36,15 @@ export class UserService {
       throw new Error(err?.message || 'Error finding user by email');
     }
   }
+
+  async getUserById(userId: string) {
+    try {
+      const user = await this.userModel.findById(userId).exec();
+
+      return user;
+    } catch (error) {
+      const err = error as { message?: string };
+      throw new Error(err?.message || 'Error finding user by ID');
+    }
+  }
 }
