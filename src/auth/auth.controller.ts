@@ -38,6 +38,7 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('profile')
   async getProfile(@Request() req) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const userId = req.user?.sub;
     const user = await this.userService.getUserById(userId);
     return user;
