@@ -24,17 +24,38 @@ export class CourseController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async create(@Body() createCourseDto: CreateCourseDto) {
-    return await this.courseService.create(createCourseDto);
+    const createdCourse = await this.courseService.create(createCourseDto);
+
+    return {
+      message: 'Course created successfully',
+      status: 'ok',
+      data: createdCourse,
+    };
   }
 
   @Get()
   async findAll() {
-    return await this.courseService.findAll();
+    const courses = await this.courseService.findAll();
+
+    return {
+      message: 'Courses retrieved successfully',
+      status: 'ok',
+      data: courses,
+      meta: {
+        total: courses.length,
+      },
+    };
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return await this.courseService.findOne(id);
+    const course = await this.courseService.findOne(id);
+
+    return {
+      message: 'Course retrieved successfully',
+      status: 'ok',
+      data: course,
+    };
   }
 
   @Patch(':id')
@@ -44,13 +65,23 @@ export class CourseController {
     @Param('id') id: string,
     @Body() updateCourseDto: UpdateCourseDto,
   ) {
-    return await this.courseService.update(id, updateCourseDto);
+    const updatedCourse = await this.courseService.update(id, updateCourseDto);
+    return {
+      message: 'Course updated successfully',
+      status: 'ok',
+      data: updatedCourse,
+    };
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async remove(@Param('id') id: string) {
-    return await this.courseService.delete(id);
+    const deletedCourse = await this.courseService.delete(id);
+    return {
+      message: 'Course deleted successfully',
+      status: 'ok',
+      data: deletedCourse,
+    };
   }
 }

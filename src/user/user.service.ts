@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { RegisterDto } from 'src/auth/dto/registerUser.dto';
@@ -23,6 +27,8 @@ export class UserService {
       if (err?.code === DUPLICATE_KEY_ERROR_CODE) {
         throw new ConflictException('Email is already taken.');
       }
+
+      throw new InternalServerErrorException('Failed to create user');
     }
   }
 
@@ -33,7 +39,9 @@ export class UserService {
       return user;
     } catch (error) {
       const err = error as { message?: string };
-      throw new Error(err?.message || 'Error finding user by email');
+      throw new InternalServerErrorException(
+        err?.message || 'Error finding user by email',
+      );
     }
   }
 
@@ -44,7 +52,9 @@ export class UserService {
       return user;
     } catch (error) {
       const err = error as { message?: string };
-      throw new Error(err?.message || 'Error finding user by ID');
+      throw new InternalServerErrorException(
+        err?.message || 'Error finding user by ID',
+      );
     }
   }
 }

@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
@@ -18,7 +19,7 @@ export class AuthService {
   async registerUser(registerDto: RegisterDto) {
     const alreadyExists = await this.userService.findByEmail(registerDto.email);
     if (alreadyExists) {
-      throw new InternalServerErrorException('User already exists');
+      throw new ConflictException('User already exists');
     }
     const saltRounds = 10;
     const hashedPass = await bcrypt.hash(registerDto.password, saltRounds);
@@ -31,7 +32,7 @@ export class AuthService {
     const payload = { email: user?.email, sub: user?._id, role: user?.role };
     const token = await this.jwtService.signAsync(payload);
 
-    return { access_token: token };
+    return { data: user, access_token: token };
   }
 
   async loginUser(email: string, password: string) {
@@ -50,7 +51,7 @@ export class AuthService {
       const payload = { email: user.email, sub: user._id, role: user.role };
       const token = await this.jwtService.signAsync(payload);
 
-      return { access_token: token };
+      return { data: user, access_token: token };
     } catch (error) {
       if (error instanceof UnauthorizedException) {
         throw error;

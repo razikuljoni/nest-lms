@@ -5,17 +5,17 @@ export type CourseDocument = HydratedDocument<Course>;
 
 @Schema()
 export class Course {
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   name: string;
 
   @Prop({ required: true })
   description: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true })
   level: string;
 
   @Prop({ required: true })
-  price: string;
+  price: number;
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);

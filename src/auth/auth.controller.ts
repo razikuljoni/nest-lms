@@ -21,8 +21,14 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
-    const token = await this.authService.registerUser(registerDto);
-    return token;
+    const userData = await this.authService.registerUser(registerDto);
+
+    return {
+      message: 'User registered successfully',
+      status: 'ok',
+      access_token: userData.access_token,
+      data: userData.data,
+    };
   }
 
   @Post('login')
@@ -32,7 +38,12 @@ export class AuthController {
       loginUserDto.password,
     );
 
-    return user;
+    return {
+      message: 'Login successful',
+      status: 'ok',
+      access_token: user.access_token,
+      data: user.data,
+    };
   }
 
   @UseGuards(AuthGuard)
@@ -41,6 +52,10 @@ export class AuthController {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const userId = req.user?.sub;
     const user = await this.userService.getUserById(userId);
-    return user;
+    return {
+      message: 'Profile retrieved successfully',
+      status: 'ok',
+      data: user,
+    };
   }
 }
